@@ -9,19 +9,48 @@ You'll see the dragons on your own frame, your party frames, and whoever you tar
 
 ## Install
 
-1. **Download:** [MidnightRiders_Dragons.zip](https://github.com/realworldbuilder/midnight-riders-dragons/releases/latest/download/MidnightRiders_Dragons.zip)
-2. **Unzip it** and put the `MidnightRiders_Dragons` folder inside your Forever AddOns folder:
-   - **Windows:** `C:\Program Files (x86)\World of Warcraft\_forever_\Interface\AddOns\`
-   - **Mac:** `/Applications/World of Warcraft/_forever_/Interface/AddOns/`
+Copy one line, paste it, press Enter.
 
-   No `AddOns` folder? Make one inside `Interface`.
-3. **Restart the game.** On the character screen, click **AddOns** and make sure **Midnight Riders Dragons** is ticked.
+### Windows
 
-That's it. Type `/mrdragon` in game to check it's working.
+Open **PowerShell** (press the Windows key, type `powershell`, press Enter) and paste:
 
-**Check the folder:** it should be `AddOns\MidnightRiders_Dragons\Dragons.lua`. If you see `AddOns\MidnightRiders_Dragons\MidnightRiders_Dragons\…`, it's one folder too deep. Move the inner folder up a level.
+```powershell
+irm https://raw.githubusercontent.com/realworldbuilder/midnight-riders-dragons/main/install.ps1 | iex
+```
 
-**Updating:** download the zip again, delete the old `MidnightRiders_Dragons` folder, and unzip the new one in its place.
+### Mac
+
+Open **Terminal** (press Cmd+Space, type `terminal`, press Enter) and paste:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/realworldbuilder/midnight-riders-dragons/main/install.sh | bash
+```
+
+Then **restart the game**. On the character screen, click **AddOns** and make sure **Midnight Riders Dragons** is ticked. Type `/mrdragon` in game to check it's working.
+
+**To update,** paste the same line again. It replaces the old version.
+
+The command finds your Forever folder on its own, downloads the latest version from this page, and puts it in `_forever_/Interface/AddOns`. It doesn't touch anything else. You can read exactly what it does in [install.ps1](install.ps1) and [install.sh](install.sh).
+
+<details>
+<summary><strong>It says it can't find Forever, or isn't allowed to write there</strong></summary>
+
+- **Can't find Forever:** tell it where your `World of Warcraft` folder is (the one with `_forever_` inside).
+  - Windows: `$env:WOW_DIR = 'D:\Games\World of Warcraft'; irm https://raw.githubusercontent.com/realworldbuilder/midnight-riders-dragons/main/install.ps1 | iex`
+  - Mac: `curl -fsSL https://raw.githubusercontent.com/realworldbuilder/midnight-riders-dragons/main/install.sh | WOW_DIR="/path/to/World of Warcraft" bash`
+- **Not allowed to write (Windows):** close the game, right-click PowerShell, choose **Run as administrator**, and paste the line again.
+
+</details>
+
+<details>
+<summary><strong>Install by hand instead</strong></summary>
+
+1. Download [MidnightRiders_Dragons.zip](https://github.com/realworldbuilder/midnight-riders-dragons/releases/latest/download/MidnightRiders_Dragons.zip).
+2. Unzip it, and put the `MidnightRiders_Dragons` folder inside `World of Warcraft/_forever_/Interface/AddOns/`. If there's no `AddOns` folder, make one.
+3. Check the folder: it should be `AddOns/MidnightRiders_Dragons/Dragons.lua`, not one folder deeper.
+
+</details>
 
 ## Commands
 
