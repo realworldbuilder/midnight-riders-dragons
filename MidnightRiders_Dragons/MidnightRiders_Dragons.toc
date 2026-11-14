@@ -1,0 +1,13 @@
+## Interface: 16001, 120105
+## Title: |cff8a7cffMidnight Riders|r Dragons
+## Notes: A gold dragon around the <Midnight Riders> guild master and silver dragons around officers, on the player, target, focus and party frames. /mrdragon
+## Author: William Hussey
+## Version: 1.0.0
+## IconTexture: Interface\Icons\INV_Misc_Head_Dragon_01
+## SavedVariables: MidnightRidersDragonsDB
+## X-Website: https://github.com/realworldbuilder/midnight-riders-dragons
+## X-License: MIT
+## X-Suite: Midnight Riders
+## X-Category: Unit Frames
+
+Dragons.lua

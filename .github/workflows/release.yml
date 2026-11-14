@@ -1,0 +1,35 @@
+name: Release
+
+# Push a tag like v1.0.1 and the addon is zipped and attached to a GitHub release.
+# The zip is always called MidnightRiders_Dragons.zip, so this link never changes:
+# https://github.com/realworldbuilder/midnight-riders-dragons/releases/latest/download/MidnightRiders_Dragons.zip
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Zip the addon
+        run: |
+          set -euo pipefail
+          toc_version=$(sed -n 's/^## Version: *//p' MidnightRiders_Dragons/MidnightRiders_Dragons.toc | tr -d '\r')
+          if [ "v$toc_version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::The TOC says $toc_version but the tag is $GITHUB_REF_NAME"
+            exit 1
+          fi
+          mkdir -p dist
+          zip -r -X dist/MidnightRiders_Dragons.zip MidnightRiders_Dragons -x '*.DS_Store'
+          unzip -l dist/MidnightRiders_Dragons.zip
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/MidnightRiders_Dragons.zip \
+            --title "Midnight Riders Dragons $GITHUB_REF_NAME" \
+            --notes "Download **MidnightRiders_Dragons.zip** below and unzip it into \`_forever_/Interface/AddOns/\`. Full steps: https://github.com/${GITHUB_REPOSITORY}#install"
