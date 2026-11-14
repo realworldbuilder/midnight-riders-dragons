@@ -1,0 +1,47 @@
+name: Test installers
+
+# Runs the README's one-line installers on real Windows and Mac machines against a fake WoW folder.
+on:
+  push:
+    branches: [main]
+    paths: ["install.sh", "install.ps1", ".github/workflows/test-install.yml"]
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        shell: [powershell, pwsh]   # Windows PowerShell 5.1 (what most people have) and PowerShell 7
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+    steps:
+      - name: Fake WoW folder
+        run: New-Item -ItemType Directory -Force -Path "$env:RUNNER_TEMP\World of Warcraft\_forever_" | Out-Null
+      - name: Install with the README one-liner (this commit's script)
+        run: |
+          $env:WOW_DIR = "$env:RUNNER_TEMP\World of Warcraft"
+          irm https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/install.ps1 | iex
+      - name: Check it landed
+        run: |
+          $toc = "$env:RUNNER_TEMP\World of Warcraft\_forever_\Interface\AddOns\MidnightRiders_Dragons\MidnightRiders_Dragons.toc"
+          if (-not (Test-Path $toc)) { throw "addon not installed" }
+          Get-Content $toc | Select-String Version
+      - name: Run it again (update)
+        run: |
+          $env:WOW_DIR = "$env:RUNNER_TEMP\World of Warcraft"
+          irm https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/install.ps1 | iex
+          if (-not (Test-Path "$env:RUNNER_TEMP\World of Warcraft\_forever_\Interface\AddOns\MidnightRiders_Dragons\Dragons.lua")) { throw "update lost the addon" }
+
+  mac:
+    runs-on: macos-latest
+    steps:
+      - name: Fake WoW folder
+        run: mkdir -p "$RUNNER_TEMP/World of Warcraft/_forever_"
+      - name: Install with the README one-liner (this commit's script)
+        run: curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/install.sh | WOW_DIR="$RUNNER_TEMP/World of Warcraft" /bin/bash
+      - name: Check it landed, then update
+        run: |
+          test -f "$RUNNER_TEMP/World of Warcraft/_forever_/Interface/AddOns/MidnightRiders_Dragons/Dragons.lua"
+          curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/install.sh | WOW_DIR="$RUNNER_TEMP/World of Warcraft" /bin/bash
